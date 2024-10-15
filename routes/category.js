@@ -6,7 +6,7 @@ const {
 
 const router = require("express").Router();
 const Category = require("../models/Category");
-const Post = require("../models/Post");
+
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
@@ -82,8 +82,6 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
     }
 
     await category.delete();
-
-    await Post.deleteMany({ categories: category._id });
 
     res.status(200).json("Kategori başarıyla silindi.");
   } catch (error) {

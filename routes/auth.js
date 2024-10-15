@@ -6,19 +6,32 @@ const jwt = require("jsonwebtoken");
 // register
 router.post("/register", async (req, res) => {
   const newUser = new User({
+    name: req.body.name,
     username: req.body.username,
     email: req.body.email,
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.PASS_SEC
     ).toString(),
+    address: {
+      street: req.body.street,  
+      city: req.body.city,
+      zipCode: req.body.zipCode,
+      country: req.body.country
+    },
   });
+
 
   try {
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
   } catch (error) {
-    res.status(500).json(error);
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: error.message });
+    } else {
+      console.log(error);
+      res.status(500).json({ error: "Sunucu hatası oluştu." });
+    }
   }
 });
 
