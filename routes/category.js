@@ -8,13 +8,6 @@ const router = require("express").Router();
 const Category = require("../models/Category");
 
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
-  if (req.body.password) {
-    req.body.password = CryptoJS.AES.encrypt(
-      req.body.password,
-      process.env.PASS_SEC
-    ).toString();
-  }
-
   try {
     const updatedCategory = await Category.findByIdAndUpdate(
       req.params.id,
@@ -58,12 +51,8 @@ router.get("/find/:id", async (req, res) => {
       return res.status(404).json({ error: "Kategori bulunamadı." });
     }
 
-    const posts = await Post.find({ categories: category._id });
-    category.posts = posts;
-
     const result = {
       category: category,
-      posts: posts
     };
 
     res.status(200).json(result);

@@ -13,7 +13,7 @@ app.use(fileUpload()); // fileUpload middleware'i burada tanımlanıyor
 
 mongoose
   .connect(process.env.MONGO_URL, {
-    dbName: "blog",
+    dbName: "ecommerce",
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
