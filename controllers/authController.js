@@ -12,17 +12,16 @@ const userRegister = async (req, res) => {
 
     const newUser = new User({
         name: req.body.name,
-        username: req.body.username,
         email: req.body.email,
         password: CryptoJS.AES.encrypt(
             req.body.password,
             process.env.PASS_SEC
         ).toString(),
         address: {
-            street: req.body.street,
-            city: req.body.city,
-            zipCode: req.body.zipCode,
-            country: req.body.country
+            street: req.body.address.street,
+            city: req.body.address.city,
+            zipCode: req.body.address.zipCode,
+            country: req.body.address.country
         },
     });
 
@@ -48,12 +47,12 @@ const userLogin = async (req, res) => {
         }
 
         const hashedPassword = CryptoJS.AES.decrypt(
-            JSON.stringify(user.password),
+            user.password,
             process.env.PASS_SEC
         );
 
         var originalText = hashedPassword.toString(CryptoJS.enc.Utf8);
-        console.log("Çözülmüş şifre:", JSON.parse(originalText));
+        console.log("Çözülmüş şifre:", originalText);
 
         const OriginalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
 
