@@ -17,7 +17,7 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findById({ _id: req.params.userID });
         res.status(200).json(user);
     } catch (err) {
         res.status(500).json(err);
@@ -34,7 +34,7 @@ const updateUser = async (req, res) => {
     
       try {
         const updatedUser = await User.findByIdAndUpdate(
-          req.params.id,
+          req.params.userID,
           {
             $set: req.body,
           },
@@ -79,7 +79,7 @@ const getStats = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id);
+        await User.findByIdAndDelete({ _id: req.params.userID });
         res.status(200).json("User has been deleted...");
       } catch (err) {
         res.status(500).json(err);
