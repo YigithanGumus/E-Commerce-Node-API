@@ -13,12 +13,12 @@ const  {
   deleteUser 
 } = require('../controllers/userController.js')
 
-router.get('/', getUsers)
+router.get('/',verifyTokenAndAdmin, getUsers)
 
-router.get('/:userID', getUser)
+router.get('/:userID',verifyTokenAndAdmin, getUser)
 
-router.put('/:userID', updateUser) 
+router.put('/:userID',verifyTokenAndAdmin, updateUser) 
 
-router.delete('/:userID', deleteUser)
+router.delete('/:userID',verifyTokenAndAdmin, deleteUser)
 
 module.exports = router;
