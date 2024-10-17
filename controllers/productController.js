@@ -84,7 +84,7 @@ const deleteProduct = async (req, res) => {
 
 const getProduct = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.productID);
+        const product = await Product.findById(req.params.productID).populate("category_id");
 
         res.status(200).json(product);
     } catch (err) {
