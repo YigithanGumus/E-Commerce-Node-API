@@ -1,8 +1,10 @@
 const router = require("express").Router();
-const Category = require("../models/Category");
-const CryptoJS = require("crypto-js");
-const jwt = require("jsonwebtoken");
-const { verifyTokenAndAdmin, verifyToken,verifyTokenAndAuthorization } = require("../middleware/verifyToken");
+
+const {
+  verifyToken,
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+} = require("./verifyToken");
 
 const {
   createCategory,
@@ -10,7 +12,7 @@ const {
   deleteCategory,
   getCategory,
   getAllCategories,
-} = require("../controllers/categoryController");
+} = require("../controllers/categoryController.js");
 
 router.post("/", verifyTokenAndAdmin, createCategory);
 
