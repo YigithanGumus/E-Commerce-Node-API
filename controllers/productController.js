@@ -46,25 +46,39 @@ const createProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-    const category = await Category.findById({ _id: req.body.category_id });
-    if (!category) {
-        return res.status(404).json("Kategori bulunamadı.");
+    let categoryId;
+
+    if (ObjectId.isValid(req.body.category_id)) {
+        categoryId = new ObjectId(req.body.category_id);
+    } else {
+        return res.status(400).json({ error: "Geçersiz kategori ID formatı." });
+    }
+
+    if (!req.files || !req.files.images || req.files.images.length === 0) {
+        return res.status(400).json({ error: "Resim yüklenemedi." });
+    }
+
+    const imagePaths = [];
+    for (const image of req.files.images) {
+        const imagePath = `./images/${Date.now()}_${image.name}`;
+        await image.mv(`./${imagePath}`);
+        imagePaths.push(imagePath);
     }
 
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(req.params.productID, { $set: req.body }, { new: true });
+        const updatedProduct = await Product.findByIdAndUpdate(req.params.productID, { $set: { ...req.body, images: imagePaths } }, { new: true });
         res.status(200).json(updatedProduct);
     } catch (err) {
-        res.status(500).json("Hata: " + err);
+        res.status(500).json({ error: "Ürün güncellenirken bir hata oluştu.", details: err.message });
     }
 }
 
 const deleteProduct = async (req, res) => {
     try {
         await Product.findByIdAndDelete({ _id: req.params.productID });
-        res.status(200).json("Ürün başarıyla silindi.");
+        res.status(200).json({ message: "Ürün başarıyla silindi." });
     } catch (err) {
-        res.status(500).json("Hata: " + err);
+        res.status(500).json({ error: "Ürün silinirken bir hata oluştu.", details: err.message });
     }
 }
 
@@ -73,7 +87,7 @@ const getProduct = async (req, res) => {
         const product = await Product.findById(req.params.productID);
         res.status(200).json(product);
     } catch (err) {
-        res.status(500).json("Hata: " + err);
+        res.status(500).json({ error: "Ürün getirilirken bir hata oluştu.", details: err.message });
     }
 }
 
@@ -91,7 +105,7 @@ const getAllProducts = async (req, res) => {
         }
         res.status(200).json(products);
     } catch (err) {
-        res.status(500).json("Hata: " + err);
+        res.status(500).json({ error: "Ürünler getirilirken bir hata oluştu.", details: err.message });
     }
 }
 
