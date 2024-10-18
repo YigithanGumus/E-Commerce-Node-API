@@ -2,7 +2,8 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
-
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 const createProduct = async (req, res) => {
     try {
         let categoryId;

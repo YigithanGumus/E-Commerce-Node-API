@@ -6,6 +6,9 @@ const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
 const categoryRoute = require("./routes/category");
 const productRoute = require("./routes/product");
+const orderRoute = require("./routes/order");
+const cartRoute = require("./routes/cart");
+
 const fileUpload = require('express-fileupload');
 
 dotenv.config();
@@ -29,6 +32,8 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);
+app.use("/api/orders", orderRoute);
+app.use("/api/carts", cartRoute);
 
 app.listen(5000, () => {
   console.log("API Aktif durumdadır!");

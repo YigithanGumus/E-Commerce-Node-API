@@ -15,7 +15,7 @@ const {
     getUserOrders
 } = require("../controllers/orderController");
 
-router.post("/", verifyToken, createOrder);
+router.post("/", verifyTokenAndAuthorization, createOrder);
 
 router.put("/:orderID", verifyTokenAndAdmin, updateOrder);
 
