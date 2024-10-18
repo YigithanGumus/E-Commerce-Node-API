@@ -8,7 +8,6 @@ const {
 
 const {
     createOrder,
-    updateOrder,
     deleteOrder,
     getOrder,
     getAllOrders,
@@ -16,8 +15,6 @@ const {
 } = require("../controllers/orderController");
 
 router.post("/", verifyTokenAndAuthorization, createOrder);
-
-router.put("/:orderID", verifyTokenAndAdmin, updateOrder);
 
 router.delete("/:orderID", verifyTokenAndAdmin, deleteOrder);
 
