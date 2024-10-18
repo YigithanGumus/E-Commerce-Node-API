@@ -8,15 +8,12 @@ const {
 
 const {
   createCategory,
-  updateCategory,
   deleteCategory,
   getCategory,
   getAllCategories,
 } = require("../controllers/categoryController.js");
 
 router.post("/", verifyTokenAndAdmin, createCategory);
-
-router.put("/:categoryID", verifyTokenAndAdmin, updateCategory);
 
 router.delete("/:categoryID", verifyTokenAndAdmin, deleteCategory);
 
