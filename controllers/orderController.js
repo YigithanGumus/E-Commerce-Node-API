@@ -1,35 +1,36 @@
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const Cart = require("../models/Cart");
 const { getInformation } = require("../utils/functions");
 
 const createOrder = async (req, res) => {
-   
+
     const user = await getInformation(req, res);
-    res.status(200).json(user);
 
-    
+    const cart = await Cart.find({ user: user.users._id, _id: req.body.cart });
 
-    // const newOrder = new Order({
-    //     user: req.user.id,
-    //     products: req.body.products,
-    //     totalAmount: req.body.totalAmount,
-    //     status: req.body.status,
-    //     shippingAddress: req.body.shippingAddress,
-    //     paymentMethod: req.body.paymentMethod
-    // });
-    // try {
-    //     const savedOrder = await newOrder.save();
-    //     res.status(200).json(savedOrder);
-    // } catch (err) {
-    //     res.status(500).json("Hata oluştu." + err);
-    // }
-}
+    const order = await Order.findOne({ user: user.users._id, _id: req.body.cart });
 
-const updateOrder = async (req, res) => {
     try {
-        const updatedOrder = await Order.findByIdAndUpdate(req.params.orderID, { $set: req.body }, { new: true });
-        res.status(200).json(updatedOrder);
+
+        if (order.length > 0 && cart.length > 0) {
+
+            const newOrder = await Order.findByIdAndUpdate(order._id, { $set: req.body, cart: cart._id, totalAmount: cart.totalPrice }, { new: true });
+            
+            res.status(200).json(newOrder);
+        } else {
+            const newOrder = new Order({
+                user: user.users._id,
+                cart: cart._id,
+                totalAmount: cart.totalPrice,
+                status: req.body.status,
+                shippingAddress: req.body.shippingAddress,
+                paymentMethod: req.body.paymentMethod
+            });
+            const savedOrder = await newOrder.save();
+            res.status(200).json(savedOrder);
+        }
     } catch (err) {
         res.status(500).json("Hata oluştu." + err);
     }
