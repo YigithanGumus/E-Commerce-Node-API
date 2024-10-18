@@ -10,19 +10,18 @@ const createOrder = async (req, res) => {
 
     const cart = await Cart.find({ user: user.users._id, _id: req.body.cart });
 
-    const order = await Order.findOne({ user: user.users._id, _id: req.body.cart });
+    const order = await Order.find({ user: user.users._id, cart: cart[0]._id });
 
     try {
-
-        if (order.length > 0 && cart.length > 0) {
-
-            const newOrder = await Order.findByIdAndUpdate(order._id, { $set: req.body, cart: cart._id, totalAmount: cart.totalPrice }, { new: true });
+        if (order.length > 0) {
+     
+            const newOrder = await Order.findByIdAndUpdate(order[0]._id, { $set: req.body, cart: cart[0]._id, totalAmount: cart[0].totalPrice }, { new: true });
             
             res.status(200).json(newOrder);
         } else {
             const newOrder = new Order({
                 user: user.users._id,
-                cart: cart._id,
+                cart: req.body.cart,
                 totalAmount: cart.totalPrice,
                 status: req.body.status,
                 shippingAddress: req.body.shippingAddress,
@@ -74,7 +73,6 @@ const getUserOrders = async (req, res) => {
 
 module.exports = {
     createOrder,
-    updateOrder,
     deleteOrder,
     getOrder,
     getAllOrders,
